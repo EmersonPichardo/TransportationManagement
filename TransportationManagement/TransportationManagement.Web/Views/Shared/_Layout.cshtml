@@ -7,30 +7,93 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TransportationManagement.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TransportationManagement.Web</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
-                    </ul>
+                <div>
+                    <button class="btn btn-light border mx-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#Menu" aria-controls="Menu">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">TransportationManagement</a>
+                </div>
+
+                <div class="d-none d-sm-block">
                     <partial name="_LoginPartial" />
                 </div>
             </div>
         </nav>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="Menu" aria-labelledby="Menu">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title">TransportationManagement</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <hr />
+            <div class="offcanvas-body">
+                <ul class="nav nav-pills flex-column mb-auto">
+                    <li class="nav-item mb-3">
+                        <a class="nav-link active" asp-controller="TransportationsRequests">
+                            <i class="fa-solid fa-envelope me-2"></i>
+                            Solicitudes
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="TransportationsHeaders">
+                            <i class="fa-solid fa-map-location-dot me-2"></i>
+                            Viajes
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="Clients">
+                            <i class="fa-solid fa-users me-2"></i>
+                            Clientes
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="Drivers">
+                            <i class="fa-solid fa-address-card me-2"></i>
+                            Conductores
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="Invioces">
+                            <i class="fa-solid fa-file-invoice-dollar me-2"></i>
+                            Facturas
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="Payments">
+                            <i class="fa-solid fa-hand-holding-dollar me-2"></i>
+                            Pagos
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="Vehicles">
+                            <i class="fa-solid fa-truck-moving me-2"></i>
+                            Vehiculos
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="VehiclesTypes">
+                            <i class="fa-solid fa-truck-plane me-2"></i>
+                            Tipos de vehiculos
+                        </a>
+                    </li>
+                    <li class="nav-item mb-3">
+                        <a class="nav-link text-dark" asp-controller="VehiclesExtensions">
+                            <i class="fa-solid fa-truck-ramp-box me-2"></i>
+                            Extensiones de vehiculos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()
