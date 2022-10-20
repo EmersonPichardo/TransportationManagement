@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Xml.Linq;
 
 namespace TransportationManagement.Web.Models
 {
@@ -12,14 +14,22 @@ namespace TransportationManagement.Web.Models
 
         public int Id { get; set; }
         public int ClientId { get; set; }
+        [Display(Name = "Descripción")]
         public string Description { get; set; } = null!;
+        [Display(Name = "Punto de recogida")]
         public string PickUpLocation { get; set; } = null!;
+        [Display(Name = "Punto de entrega")]
         public string DeliveryLocation { get; set; } = null!;
+        [Display(Name = "Fecha de recogida")]
         public DateTime PickUpDate { get; set; }
+        [Display(Name = "Fecha de entrega")]
         public DateTime DeliverypDate { get; set; }
+        [Display(Name = "Monto")]
         public decimal Amount { get; set; }
         public string DriverId { get; set; } = null!;
+        [Display(Name = "Número de placa")]
         public string VehicleLicensePlate { get; set; } = null!;
+        [Display(Name = "Estado")]
         public string Status { get; set; } = null!;
 
         public virtual Client Client { get; set; } = null!;
