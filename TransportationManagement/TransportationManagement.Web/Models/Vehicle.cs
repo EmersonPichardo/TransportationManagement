@@ -9,7 +9,7 @@ namespace TransportationManagement.Web.Models
     {
         public Vehicle()
         {
-            TransportationsDetails = new HashSet<TransportationDetail>();
+            TransportationsDetails = new ();
         }
 
         [Display(Name = "Número de placa")]
@@ -21,7 +21,7 @@ namespace TransportationManagement.Web.Models
         [Display(Name = "Estado")]
         public string Status { get; set; } = null!;
 
-        public virtual VehicleType VehiclesTypesDescriptionNavigation { get; set; } = null!;
-        public virtual ICollection<TransportationDetail> TransportationsDetails { get; set; }
+        public virtual VehicleType? VehiclesTypesDescriptionNavigation { get; set; } = null!;
+        public virtual List<TransportationDetail>? TransportationsDetails { get; set; }
     }
 }

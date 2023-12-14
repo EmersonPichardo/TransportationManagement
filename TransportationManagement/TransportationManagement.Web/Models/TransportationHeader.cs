@@ -9,21 +9,22 @@ namespace TransportationManagement.Web.Models
     {
         public TransportationHeader()
         {
-            Invioces = new HashSet<Invioce>();
+            Invioces = null;
+            TransportationsDetails = new ();
         }
 
         public int Id { get; set; }
+        [Display(Name = "Cliente")]
         public int ClientId { get; set; }
         [Display(Name = "Fecha de creación")]
         public DateTime CreationDate { get; set; }
         [Display(Name = "Monto total")]
         public decimal TotalAmount { get; set; }
-        public int TransportationRequestId { get; set; }
         [Display(Name = "Estado")]
-        public string Status { get; set; } = null!;
+        public string Status { get; set; } = "New"!;
 
-        public virtual Client Client { get; set; } = null!;
-        public virtual TransportationRequest TransportationRequest { get; set; } = null!;
-        public virtual ICollection<Invioce> Invioces { get; set; }
+        public virtual Client? Client { get; set; } = null!;
+        public virtual List<Invioce>? Invioces { get; set; }
+        public virtual List<TransportationDetail>? TransportationsDetails { get; set; }
     }
 }

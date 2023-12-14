@@ -14,15 +14,13 @@ namespace TransportationManagement.Web.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public TransportationsHeadersController(ApplicationDbContext context)
-        {
+        public TransportationsHeadersController(ApplicationDbContext context) =>
             _context = context;
-        }
 
         // GET: TransportationHeaders
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.TransportationsHeaders.Include(t => t.Client).Include(t => t.TransportationRequest);
+            var applicationDbContext = _context.TransportationsHeaders.Include(t => t.Client);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -30,64 +28,65 @@ namespace TransportationManagement.Web.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.TransportationsHeaders == null)
-            {
                 return NotFound();
-            }
 
             var transportationHeader = await _context.TransportationsHeaders
                 .Include(t => t.Client)
-                .Include(t => t.TransportationRequest)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (transportationHeader == null)
-            {
-                return NotFound();
-            }
 
-            return View(transportationHeader);
+            if (transportationHeader == null)
+                return NotFound();
+
+            return View(
+                GetModelViewData(transportationHeader, false)
+            ); ;
         }
 
         // GET: TransportationHeaders/Create
-        public IActionResult Create()
-        {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id");
-            ViewData["TransportationRequestId"] = new SelectList(_context.TransportationsRequests, "Id", "Id");
-            return View();
-        }
+        public IActionResult Create() =>
+            View(GetModelViewData());
 
         // POST: TransportationHeaders/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientId,CreationDate,TotalAmount,TransportationRequestId,Status")] TransportationHeader transportationHeader)
+        public async Task<IActionResult> Create([Bind("ClientId, TotalAmount, TransportationsDetails")] TransportationHeader transportationHeader) 
         {
-            if (ModelState.IsValid)
-            {
-                _context.Add(transportationHeader);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", transportationHeader.ClientId);
-            ViewData["TransportationRequestId"] = new SelectList(_context.TransportationsRequests, "Id", "Id", transportationHeader.TransportationRequestId);
-            return View(transportationHeader);
+            transportationHeader.CreationDate = DateTime.Now;
+            transportationHeader.TransportationsDetails?.RemoveAt(0);
+
+            if (transportationHeader.TransportationsDetails?.Any() is null or false)
+                transportationHeader.TransportationsDetails = null;
+
+            ModelState.ClearValidationState(nameof(transportationHeader));
+            if (!TryValidateModel(transportationHeader))
+                return View(GetModelViewData(transportationHeader));
+
+            _context.Add(transportationHeader);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: TransportationHeaders/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.TransportationsHeaders == null)
-            {
                 return NotFound();
-            }
 
-            var transportationHeader = await _context.TransportationsHeaders.FindAsync(id);
+            var transportationHeader = await _context.TransportationsHeaders
+                .Include(t => t.Client)
+                .Include(t => t.TransportationsDetails)
+                .SingleOrDefaultAsync(t => t.Id == id);
+
             if (transportationHeader == null)
-            {
                 return NotFound();
-            }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", transportationHeader.ClientId);
-            ViewData["TransportationRequestId"] = new SelectList(_context.TransportationsRequests, "Id", "Id", transportationHeader.TransportationRequestId);
-            return View(transportationHeader);
+
+            return View(
+                "Create",
+                GetModelViewData(transportationHeader)
+            );
         }
 
         // POST: TransportationHeaders/Edit/5
@@ -95,12 +94,10 @@ namespace TransportationManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,CreationDate,TotalAmount,TransportationRequestId,Status")] TransportationHeader transportationHeader)
+        public async Task<IActionResult> Edit(int id, [Bind("Id, ClientId, TotalAmount, Status, TransportationsDetails")] TransportationHeader transportationHeader)
         {
             if (id != transportationHeader.Id)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -123,7 +120,6 @@ namespace TransportationManagement.Web.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", transportationHeader.ClientId);
-            ViewData["TransportationRequestId"] = new SelectList(_context.TransportationsRequests, "Id", "Id", transportationHeader.TransportationRequestId);
             return View(transportationHeader);
         }
 
@@ -131,18 +127,14 @@ namespace TransportationManagement.Web.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.TransportationsHeaders == null)
-            {
                 return NotFound();
-            }
 
             var transportationHeader = await _context.TransportationsHeaders
                 .Include(t => t.Client)
-                .Include(t => t.TransportationRequest)
                 .FirstOrDefaultAsync(m => m.Id == id);
+
             if (transportationHeader == null)
-            {
                 return NotFound();
-            }
 
             return View(transportationHeader);
         }
@@ -161,14 +153,37 @@ namespace TransportationManagement.Web.Controllers
             {
                 _context.TransportationsHeaders.Remove(transportationHeader);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TransportationHeaderExists(int id)
         {
-          return _context.TransportationsHeaders.Any(e => e.Id == id);
+            return _context.TransportationsHeaders.Any(e => e.Id == id);
+        }
+
+        private TransportationHeader GetModelViewData(TransportationHeader? transportationHeader = null, bool setSelectData = true)
+        {
+            if (setSelectData)
+            {
+                ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name");
+                ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "Name");
+                ViewData["VehicleLicensePlate"] = new SelectList(_context.Vehicles, "LicensePlate", "LicensePlate");
+            }
+
+            if (transportationHeader is null)
+                transportationHeader = new();
+
+            if (transportationHeader.Client is null)
+                transportationHeader.Client = new();
+
+            if (transportationHeader.TransportationsDetails?.Any() is null or false)
+                transportationHeader.TransportationsDetails = new List<TransportationDetail>() {
+                    new TransportationDetail()
+                };
+
+            return transportationHeader;
         }
     }
 }

@@ -22,7 +22,7 @@ namespace TransportationManagement.Web.Controllers
         // GET: TransportationDetails
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.TransportationsDetails.Include(t => t.Client).Include(t => t.Driver).Include(t => t.VehicleLicensePlateNavigation);
+            var applicationDbContext = _context.TransportationsDetails.Include(t => t.TransportationHeader).Include(t => t.Driver).Include(t => t.VehicleLicensePlateNavigation);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -35,7 +35,7 @@ namespace TransportationManagement.Web.Controllers
             }
 
             var transportationDetail = await _context.TransportationsDetails
-                .Include(t => t.Client)
+                .Include(t => t.TransportationHeader)
                 .Include(t => t.Driver)
                 .Include(t => t.VehicleLicensePlateNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -50,7 +50,7 @@ namespace TransportationManagement.Web.Controllers
         // GET: TransportationDetails/Create
         public IActionResult Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id");
+            ViewData["TransportationHeaderId"] = new SelectList(_context.TransportationsHeaders, "Id", "Id");
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "Id");
             ViewData["VehicleLicensePlate"] = new SelectList(_context.Vehicles, "LicensePlate", "LicensePlate");
             return View();
@@ -61,7 +61,7 @@ namespace TransportationManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,ClientId,Description,PickUpLocation,DeliveryLocation,PickUpDate,DeliverypDate,Amount,DriverId,VehicleLicensePlate,Status")] TransportationDetail transportationDetail)
+        public async Task<IActionResult> Create([Bind("Id,TransportationHeaderId,Description,PickUpLocation,DeliveryLocation,PickUpDate,DeliverypDate,Amount,DriverId,VehicleLicensePlate,Status")] TransportationDetail transportationDetail)
         {
             if (ModelState.IsValid)
             {
@@ -69,7 +69,7 @@ namespace TransportationManagement.Web.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", transportationDetail.ClientId);
+            ViewData["TransportationHeaderId"] = new SelectList(_context.TransportationsHeaders, "Id", "Id", transportationDetail.TransportationHeaderId);
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "Id", transportationDetail.DriverId);
             ViewData["VehicleLicensePlate"] = new SelectList(_context.Vehicles, "LicensePlate", "LicensePlate", transportationDetail.VehicleLicensePlate);
             return View(transportationDetail);
@@ -88,7 +88,7 @@ namespace TransportationManagement.Web.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", transportationDetail.ClientId);
+            ViewData["TransportationHeaderId"] = new SelectList(_context.TransportationsHeaders, "Id", "Id", transportationDetail.TransportationHeaderId);
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "Id", transportationDetail.DriverId);
             ViewData["VehicleLicensePlate"] = new SelectList(_context.Vehicles, "LicensePlate", "LicensePlate", transportationDetail.VehicleLicensePlate);
             return View(transportationDetail);
@@ -99,7 +99,7 @@ namespace TransportationManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ClientId,Description,PickUpLocation,DeliveryLocation,PickUpDate,DeliverypDate,Amount,DriverId,VehicleLicensePlate,Status")] TransportationDetail transportationDetail)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,TransportationHeaderId,Description,PickUpLocation,DeliveryLocation,PickUpDate,DeliverypDate,Amount,DriverId,VehicleLicensePlate,Status")] TransportationDetail transportationDetail)
         {
             if (id != transportationDetail.Id)
             {
@@ -126,7 +126,7 @@ namespace TransportationManagement.Web.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", transportationDetail.ClientId);
+            ViewData["TransportationHeaderId"] = new SelectList(_context.TransportationsHeaders, "Id", "Id", transportationDetail.TransportationHeaderId);
             ViewData["DriverId"] = new SelectList(_context.Drivers, "Id", "Id", transportationDetail.DriverId);
             ViewData["VehicleLicensePlate"] = new SelectList(_context.Vehicles, "LicensePlate", "LicensePlate", transportationDetail.VehicleLicensePlate);
             return View(transportationDetail);
@@ -141,7 +141,7 @@ namespace TransportationManagement.Web.Controllers
             }
 
             var transportationDetail = await _context.TransportationsDetails
-                .Include(t => t.Client)
+                .Include(t => t.TransportationHeader)
                 .Include(t => t.Driver)
                 .Include(t => t.VehicleLicensePlateNavigation)
                 .FirstOrDefaultAsync(m => m.Id == id);

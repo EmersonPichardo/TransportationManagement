@@ -7,11 +7,6 @@ namespace TransportationManagement.Web.Models
 {
     public partial class TransportationRequest
     {
-        public TransportationRequest()
-        {
-            TransportationsHeaders = new HashSet<TransportationHeader>();
-        }
-
         public int Id { get; set; }
         [Display(Name = "Descripción")]
         public string Description { get; set; } = null!;
@@ -27,7 +22,5 @@ namespace TransportationManagement.Web.Models
         public string? ContainerNumber { get; set; }
         [Display(Name = "Estado")]
         public string Status { get; set; } = null!;
-
-        public virtual ICollection<TransportationHeader> TransportationsHeaders { get; set; }
     }
 }

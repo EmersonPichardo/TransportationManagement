@@ -4,48 +4,187 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1>Crear</h1>
 
-<h4>TransportationHeader</h4>
+<h4>Orden de transporte</h4>
 <hr />
+
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="ClientId" class="control-label"></label>
-                <select asp-for="ClientId" class ="form-control" asp-items="ViewBag.ClientId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="CreationDate" class="control-label"></label>
-                <input asp-for="CreationDate" class="form-control" />
-                <span asp-validation-for="CreationDate" class="text-danger"></span>
+                <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="TotalAmount" class="control-label"></label>
-                <input asp-for="TotalAmount" class="form-control" />
+                <input asp-for="TotalAmount" readonly class="form-control" />
                 <span asp-validation-for="TotalAmount" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="TransportationRequestId" class="control-label"></label>
-                <select asp-for="TransportationRequestId" class ="form-control" asp-items="ViewBag.TransportationRequestId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+            <div class="form-group text-end mt-3">
+                <div class="float-start">
+                    <a asp-action="Index">Back to List</a>
+                </div>
+
                 <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+
+            <h5 class="mt-4">Viajes</h5>
+            <hr />
+
+            @{
+                var modelDetail = new TransportationDetail();
+            }
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Agregar</button>
+            <table id="Details" class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @Html.DisplayNameFor(model => modelDetail.Description)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => modelDetail.Amount)
+                        </th>
+                        <th>
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (var index = 1; index < Model.TransportationsDetails.Count(); index++ )
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(model => model.TransportationsDetails[index].Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => model.TransportationsDetails[index].Amount)
+                            </td>
+                            <td>
+                                <a href="#">Edit</a> |
+                                <a href="#">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <div id="DetailsValues">
+                <input type="hidden" asp-for="TransportationsDetails[0].Description" />
+                <input type="hidden" asp-for="TransportationsDetails[0].PickUpLocation" />
+                <input type="hidden" asp-for="TransportationsDetails[0].DeliveryLocation" />
+                <input type="hidden" asp-for="TransportationsDetails[0].PickUpDate" />
+                <input type="hidden" asp-for="TransportationsDetails[0].DeliverypDate" />
+                <input type="hidden" asp-for="TransportationsDetails[0].Amount" />
+                <input type="hidden" asp-for="TransportationsDetails[0].DriverId" />
+                <input type="hidden" asp-for="TransportationsDetails[0].VehicleLicensePlate" />
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Agregar viaje</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="Detailsform">
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].Description" class="control-label"></label>
+                        <input asp-for="TransportationsDetails[0].Description" class="form-control" />
+                        <span asp-validation-for="TransportationsDetails[0].Description" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].PickUpLocation" class="control-label"></label>
+                        <input asp-for="TransportationsDetails[0].PickUpLocation" class="form-control" />
+                        <span asp-validation-for="TransportationsDetails[0].PickUpLocation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].DeliveryLocation" class="control-label"></label>
+                        <input asp-for="TransportationsDetails[0].DeliveryLocation" class="form-control" />
+                        <span asp-validation-for="TransportationsDetails[0].DeliveryLocation" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].PickUpDate" class="control-label"></label>
+                        <input asp-for="TransportationsDetails[0].PickUpDate" class="form-control" />
+                        <span asp-validation-for="TransportationsDetails[0].PickUpDate" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].DeliverypDate" class="control-label"></label>
+                        <input asp-for="TransportationsDetails[0].DeliverypDate" class="form-control" />
+                        <span asp-validation-for="TransportationsDetails[0].DeliverypDate" class="text-danger"></span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].Amount" class="control-label"></label>
+                        <input asp-for="TransportationsDetails[0].Amount" class="form-control" />
+                        <span asp-validation-for="TransportationsDetails[0].Amount" class="text-danger"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].DriverId" class="control-label"></label>
+                        <select asp-for="TransportationsDetails[0].DriverId" class="form-control" asp-items="ViewBag.DriverId"></select>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for="TransportationsDetails[0].VehicleLicensePlate" class="control-label"></label>
+                        <select asp-for="TransportationsDetails[0].VehicleLicensePlate" class="form-control" asp-items="ViewBag.VehicleLicensePlate"></select>
+                    </div>
+
+                    <input id="addDetail" type="submit" value="Create" class="btn btn-primary mt-3" />
+                </form>
+            </div>
+        </div>
+    </div>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        $(document).ready(() => {
+            let form = $('#Detailsform');
+            let table = $('#Details');
+            let tbody = table.find('tbody');
+            let values = $('#DetailsValues')[0];
+
+            form.submit(event => {
+                event.preventDefault();
+
+                if(!form.valid()) return;
+
+                let dataArray = form.serializeArray();
+                let rowCount = tbody.find('tr').length + 1;
+                let newRow = tbody[0].insertRow();
+
+                for (index in dataArray) {
+                    let newElement = document.createElement('input');
+
+                    newElement.setAttribute('type', 'hidden');
+                    newElement.setAttribute('name', dataArray[index].name.replace('[0]', `[${rowCount}]`));
+                    newElement.setAttribute('value', dataArray[index].value);
+
+                    values.appendChild(newElement);
+
+                    if (!(dataArray[index].name?.endsWith('Description') || dataArray[index].name?.endsWith('Amount'))) continue;
+
+                    let newCell = newRow.insertCell();
+                    newElement = document.createTextNode(dataArray[index].value);
+                    newCell.appendChild(newElement);
+                }
+                
+                let newCell = newRow.insertCell();
+                let newText = document.createTextNode('edit | delete');
+                newCell.appendChild(newText);
+            });
+        });
+    </script>
 }

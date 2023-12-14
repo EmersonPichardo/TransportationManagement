@@ -34,62 +34,29 @@
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
             <hr />
+            @{
+                var menuItems = new[] {
+                    new { ControllerName = "TransportationsHeaders", Title = "Ordenes", IconClass = "fa-solid fa-map-location-dot", isActive = true },
+                    new { ControllerName = "Clients", Title = "Clientes", IconClass = "fa-solid fa-users", isActive = false },
+                    new { ControllerName = "Drivers", Title = "Conductores", IconClass = "fa-solid fa-address-card", isActive = false },
+                    new { ControllerName = "Invioces", Title = "Facturas", IconClass = "fa-solid fa-file-invoice-dollar", isActive = false },
+                    new { ControllerName = "Payments", Title = "Pagos", IconClass = "fa-solid fa-hand-holding-dollar", isActive = false },
+                    new { ControllerName = "Vehicles", Title = "Vehiculos", IconClass = "fa-solid fa-truck-moving", isActive = false },
+                    new { ControllerName = "VehiclesTypes", Title = "Tipos de vehiculos", IconClass = "fa-solid fa-truck-plane", isActive = false },
+                    new { ControllerName = "VehiclesExtensions", Title = "Extensiones de vehiculos", IconClass = "fa-solid fa-truck-ramp-box", isActive = false }
+                };
+            }
             <div class="offcanvas-body">
                 <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item mb-3">
-                        <a class="nav-link active" asp-controller="TransportationsRequests">
-                            <i class="fa-solid fa-envelope me-2"></i>
-                            Solicitudes
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="TransportationsHeaders">
-                            <i class="fa-solid fa-map-location-dot me-2"></i>
-                            Viajes
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="Clients">
-                            <i class="fa-solid fa-users me-2"></i>
-                            Clientes
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="Drivers">
-                            <i class="fa-solid fa-address-card me-2"></i>
-                            Conductores
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="Invioces">
-                            <i class="fa-solid fa-file-invoice-dollar me-2"></i>
-                            Facturas
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="Payments">
-                            <i class="fa-solid fa-hand-holding-dollar me-2"></i>
-                            Pagos
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="Vehicles">
-                            <i class="fa-solid fa-truck-moving me-2"></i>
-                            Vehiculos
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="VehiclesTypes">
-                            <i class="fa-solid fa-truck-plane me-2"></i>
-                            Tipos de vehiculos
-                        </a>
-                    </li>
-                    <li class="nav-item mb-3">
-                        <a class="nav-link text-dark" asp-controller="VehiclesExtensions">
-                            <i class="fa-solid fa-truck-ramp-box me-2"></i>
-                            Extensiones de vehiculos
-                        </a>
-                    </li>
+                    @foreach(var item in menuItems)
+                    {
+                        <li class="nav-item mb-3">
+                            <a class="nav-link @(item.isActive ? "active" : "text-dark")" asp-controller="@item.ControllerName" asp-action="index">
+                                <i class="@item.IconClass me-2"></i>
+                                @item.Title
+                            </a>
+                        </li>
+                    }
                 </ul>
             </div>
         </div>

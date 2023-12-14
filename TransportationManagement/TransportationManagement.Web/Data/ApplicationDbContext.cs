@@ -73,10 +73,6 @@ namespace TransportationManagement.Web.Data
             {
                 entity.ToTable("Drivers");
 
-                entity.Property(e => e.Id)
-                    .HasMaxLength(20)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.Name)
                     .HasMaxLength(200)
                     .IsUnicode(false);
@@ -158,14 +154,14 @@ namespace TransportationManagement.Web.Data
 
                 entity.Property(e => e.Amount).HasColumnType("money");
 
-                entity.Property(e => e.ClientId).HasColumnName("Client_Id");
+                entity.Property(e => e.TransportationHeaderId).HasColumnName("TransportationHeader_Id");
 
                 entity.Property(e => e.DeliveryLocation)
                     .HasMaxLength(5000)
                     .IsUnicode(false);
 
                 entity.Property(e => e.DeliverypDate).HasColumnType("datetime");
-
+                
                 entity.Property(e => e.Description)
                     .HasMaxLength(500)
                     .IsUnicode(false);
@@ -191,11 +187,11 @@ namespace TransportationManagement.Web.Data
                     .HasColumnName("Vehicle_LicensePlate")
                     .IsFixedLength();
 
-                entity.HasOne(d => d.Client)
+                entity.HasOne(d => d.TransportationHeader)
                     .WithMany(p => p.TransportationsDetails)
-                    .HasForeignKey(d => d.ClientId)
+                    .HasForeignKey(d => d.TransportationHeaderId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransportationsDetails_Clients");
+                    .HasConstraintName("FK_TransportationsDetails_TransportationsHeaders");
 
                 entity.HasOne(d => d.Driver)
                     .WithMany(p => p.TransportationsDetails)
@@ -257,19 +253,12 @@ namespace TransportationManagement.Web.Data
 
                 entity.Property(e => e.TotalAmount).HasColumnType("money");
 
-                entity.Property(e => e.TransportationRequestId).HasColumnName("TransportationRequest_Id");
 
                 entity.HasOne(d => d.Client)
                     .WithMany(p => p.TransportationsHeaders)
                     .HasForeignKey(d => d.ClientId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_TransportationsHeaders_Clients");
-
-                entity.HasOne(d => d.TransportationRequest)
-                    .WithMany(p => p.TransportationsHeaders)
-                    .HasForeignKey(d => d.TransportationRequestId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TransportationsHeaders_TransportationsRequests");
             });
 
             modelBuilder.Entity<TransportationRequest>(entity =>

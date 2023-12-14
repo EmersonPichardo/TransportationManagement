@@ -12,7 +12,7 @@ namespace TransportationManagement.Web.Models
             TransportationsDetails = new HashSet<TransportationDetail>();
         }
 
-        public string Id { get; set; } = null!;
+        public int Id { get; set; }
         [Display(Name = "Nombre")]
         public string Name { get; set; } = null!;
         [Display(Name = "Número de RNTT")]

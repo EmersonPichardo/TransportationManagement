@@ -13,7 +13,7 @@ namespace TransportationManagement.Web.Models
         }
 
         public int Id { get; set; }
-        public int ClientId { get; set; }
+        public int TransportationHeaderId { get; set; }
         [Display(Name = "Descripción")]
         public string Description { get; set; } = null!;
         [Display(Name = "Punto de recogida")]
@@ -26,15 +26,16 @@ namespace TransportationManagement.Web.Models
         public DateTime DeliverypDate { get; set; }
         [Display(Name = "Monto")]
         public decimal Amount { get; set; }
-        public string DriverId { get; set; } = null!;
+        [Display(Name = "Conductor")]
+        public int DriverId { get; set; }
         [Display(Name = "Número de placa")]
         public string VehicleLicensePlate { get; set; } = null!;
         [Display(Name = "Estado")]
-        public string Status { get; set; } = null!;
+        public string Status { get; set; } = "New"!;
 
-        public virtual Client Client { get; set; } = null!;
-        public virtual Driver Driver { get; set; } = null!;
-        public virtual Vehicle VehicleLicensePlateNavigation { get; set; } = null!;
+        public virtual TransportationHeader? TransportationHeader { get; set; } = null!;
+        public virtual Driver? Driver { get; set; } = null!;
+        public virtual Vehicle? VehicleLicensePlateNavigation { get; set; } = null!;
         public virtual ICollection<TransportationDetailVehicleExtension> TransportationsDetailsVehiclesExtensions { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace TransportationManagement.Web.Controllers
         }
 
         // GET: Drivers/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int id)
         {
             if (id == null || _context.Drivers == null)
             {
@@ -54,7 +54,7 @@ namespace TransportationManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Rnttnumber,Status")] Driver driver)
+        public async Task<IActionResult> Create([Bind("Name,Rnttnumber,Status")] Driver driver)
         {
             if (ModelState.IsValid)
             {
@@ -66,7 +66,7 @@ namespace TransportationManagement.Web.Controllers
         }
 
         // GET: Drivers/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int id)
         {
             if (id == null || _context.Drivers == null)
             {
@@ -86,7 +86,7 @@ namespace TransportationManagement.Web.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Id,Name,Rnttnumber,Status")] Driver driver)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Rnttnumber,Status")] Driver driver)
         {
             if (id != driver.Id)
             {
@@ -117,7 +117,7 @@ namespace TransportationManagement.Web.Controllers
         }
 
         // GET: Drivers/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (id == null || _context.Drivers == null)
             {
@@ -137,7 +137,7 @@ namespace TransportationManagement.Web.Controllers
         // POST: Drivers/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Drivers == null)
             {
@@ -153,7 +153,7 @@ namespace TransportationManagement.Web.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool DriverExists(string id)
+        private bool DriverExists(int id)
         {
           return _context.Drivers.Any(e => e.Id == id);
         }

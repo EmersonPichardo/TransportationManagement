@@ -9,7 +9,6 @@ namespace TransportationManagement.Web.Models
     {
         public Client()
         {
-            TransportationsDetails = new HashSet<TransportationDetail>();
             TransportationsHeaders = new HashSet<TransportationHeader>();
         }
 
@@ -26,7 +25,6 @@ namespace TransportationManagement.Web.Models
         [Display(Name = "Estado")]
         public string Status { get; set; } = null!;
 
-        public virtual ICollection<TransportationDetail> TransportationsDetails { get; set; }
         public virtual ICollection<TransportationHeader> TransportationsHeaders { get; set; }
     }
 }

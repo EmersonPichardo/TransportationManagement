@@ -12,8 +12,8 @@ using TransportationManagement.Web.Data;
 namespace TransportationManagement.Web.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221015200532_test")]
-    partial class test
+    [Migration("20221029221228_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -275,10 +275,11 @@ namespace TransportationManagement.Web.Data.Migrations
 
             modelBuilder.Entity("TransportationManagement.Web.Models.Driver", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasMaxLength(20)
-                        .IsUnicode(false)
-                        .HasColumnType("varchar(20)");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -391,10 +392,6 @@ namespace TransportationManagement.Web.Data.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("money");
 
-                    b.Property<int>("ClientId")
-                        .HasColumnType("int")
-                        .HasColumnName("Client_Id");
-
                     b.Property<string>("DeliveryLocation")
                         .IsRequired()
                         .HasMaxLength(5000)
@@ -410,11 +407,10 @@ namespace TransportationManagement.Web.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(500)");
 
-                    b.Property<string>("DriverId")
-                        .IsRequired()
+                    b.Property<int>("DriverId")
                         .HasMaxLength(20)
                         .IsUnicode(false)
-                        .HasColumnType("varchar(20)")
+                        .HasColumnType("int")
                         .HasColumnName("Driver_Id");
 
                     b.Property<DateTime>("PickUpDate")
@@ -432,6 +428,10 @@ namespace TransportationManagement.Web.Data.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(10)");
 
+                    b.Property<int>("TransportationHeaderId")
+                        .HasColumnType("int")
+                        .HasColumnName("TransportationHeader_Id");
+
                     b.Property<string>("VehicleLicensePlate")
                         .IsRequired()
                         .HasMaxLength(7)
@@ -442,9 +442,9 @@ namespace TransportationManagement.Web.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ClientId");
-
                     b.HasIndex("DriverId");
+
+                    b.HasIndex("TransportationHeaderId");
 
                     b.HasIndex("VehicleLicensePlate");
 
@@ -501,15 +501,9 @@ namespace TransportationManagement.Web.Data.Migrations
                     b.Property<decimal>("TotalAmount")
                         .HasColumnType("money");
 
-                    b.Property<int>("TransportationRequestId")
-                        .HasColumnType("int")
-                        .HasColumnName("TransportationRequest_Id");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
-
-                    b.HasIndex("TransportationRequestId");
 
                     b.ToTable("TransportationsHeaders", (string)null);
                 });
@@ -734,17 +728,17 @@ namespace TransportationManagement.Web.Data.Migrations
 
             modelBuilder.Entity("TransportationManagement.Web.Models.TransportationDetail", b =>
                 {
-                    b.HasOne("TransportationManagement.Web.Models.Client", "Client")
-                        .WithMany("TransportationsDetails")
-                        .HasForeignKey("ClientId")
-                        .IsRequired()
-                        .HasConstraintName("FK_TransportationsDetails_Clients");
-
                     b.HasOne("TransportationManagement.Web.Models.Driver", "Driver")
                         .WithMany("TransportationsDetails")
                         .HasForeignKey("DriverId")
                         .IsRequired()
                         .HasConstraintName("FK_TransportationsDetails_Drivers");
+
+                    b.HasOne("TransportationManagement.Web.Models.TransportationHeader", "TransportationHeader")
+                        .WithMany("TransportationsDetails")
+                        .HasForeignKey("TransportationHeaderId")
+                        .IsRequired()
+                        .HasConstraintName("FK_TransportationsDetails_TransportationsHeaders");
 
                     b.HasOne("TransportationManagement.Web.Models.Vehicle", "VehicleLicensePlateNavigation")
                         .WithMany("TransportationsDetails")
@@ -752,9 +746,9 @@ namespace TransportationManagement.Web.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_TransportationsDetails_Vehicles");
 
-                    b.Navigation("Client");
-
                     b.Navigation("Driver");
+
+                    b.Navigation("TransportationHeader");
 
                     b.Navigation("VehicleLicensePlateNavigation");
                 });
@@ -786,15 +780,7 @@ namespace TransportationManagement.Web.Data.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_TransportationsHeaders_Clients");
 
-                    b.HasOne("TransportationManagement.Web.Models.TransportationRequest", "TransportationRequest")
-                        .WithMany("TransportationsHeaders")
-                        .HasForeignKey("TransportationRequestId")
-                        .IsRequired()
-                        .HasConstraintName("FK_TransportationsHeaders_TransportationsRequests");
-
                     b.Navigation("Client");
-
-                    b.Navigation("TransportationRequest");
                 });
 
             modelBuilder.Entity("TransportationManagement.Web.Models.Vehicle", b =>
@@ -829,8 +815,6 @@ namespace TransportationManagement.Web.Data.Migrations
 
             modelBuilder.Entity("TransportationManagement.Web.Models.Client", b =>
                 {
-                    b.Navigation("TransportationsDetails");
-
                     b.Navigation("TransportationsHeaders");
                 });
 
@@ -852,11 +836,8 @@ namespace TransportationManagement.Web.Data.Migrations
             modelBuilder.Entity("TransportationManagement.Web.Models.TransportationHeader", b =>
                 {
                     b.Navigation("Invioces");
-                });
 
-            modelBuilder.Entity("TransportationManagement.Web.Models.TransportationRequest", b =>
-                {
-                    b.Navigation("TransportationsHeaders");
+                    b.Navigation("TransportationsDetails");
                 });
 
             modelBuilder.Entity("TransportationManagement.Web.Models.Vehicle", b =>
